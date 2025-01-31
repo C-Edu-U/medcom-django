@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add/Edit Person</title>
+</head>
+<body>
+    <h1>{% if person %}Edit Person{% else %}Add Person{% endif %}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label>First Name:</label>
+        <input type="text" name="first_name" value="{{ person.first_name|default_if_none:'' }}" required><br>
+        <label>Last Name:</label>
+        <input type="text" name="last_name" value="{{ person.last_name|default_if_none:'' }}" required><br>
+        <label>Date of Birth:</label>
+        <input type="date" name="date_of_birth" value="{{ person.date_of_birth|default_if_none:'' }}" required><br>
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ person.email|default_if_none:'' }}" required><br>
+        <label>Phone:</label>
+        <input type="text" name="phone" value="{{ person.phone|default_if_none:'' }}" required><br>
+        <label>Address:</label>
+        <input type="text" name="address" value="{{ person.address|default_if_none:'' }}" required><br>
+        <label>Gender:</label>
+        <select name="gender" required>
+            <option value="Male" {% if person.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if person.gender == 'Female' %}selected{% endif %}>Female</option>
+            <option value="Other" {% if person.gender == 'Other' %}selected{% endif %}>Other</option>
+        </select><br>
+        <button type="submit">Save</button>
+    </form>
+    <a href="{% url 'person_list' %}">Back</a>
+</body>
+</html>

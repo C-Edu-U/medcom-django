@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor List</title>
+</head>
+<body>
+    <h1>Doctors</h1>
+    <a href="{% url 'doctor_create' %}">Add New Doctor</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+                <tr>
+                    <td>Dr. {{ doctor.person.first_name }} {{ doctor.person.last_name }}</td>
+                    <td>
+                        <a href="{% url 'doctor_update' doctor.id %}">Edit</a> |
+                        <a href="{% url 'doctor_delete' doctor.id %}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
