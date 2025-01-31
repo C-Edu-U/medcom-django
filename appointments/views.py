@@ -1,39 +1,77 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from patients.models import Patient
+from people.models import Person
 from .models import Appointment
-from .forms import AppointmentForm
+from .forms import UserRegistrationForm, PersonForm, AppointmentForm
+from django.contrib.auth.decorators import login_required
+from appointments.models import Appointment
+from appointments.forms import PatientAppointmentForm
+from patients.models import Patient
 
-# List all appointments
-def appointment_list(request):
-    appointments = Appointment.objects.all()
-    return render(request, 'appointments/appointment_list.html', {'appointments': appointments})
-
-# Create a new appointment
-def appointment_create(request):
+def multi_step_appointment(request):
     if request.method == "POST":
-        form = AppointmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('appointment_list')
+        user_form = UserRegistrationForm(request.POST)
+        person_form = PersonForm(request.POST)
+        appointment_form = AppointmentForm(request.POST)
+
+        if user_form.is_valid() and person_form.is_valid() and appointment_form.is_valid():
+            # Step 1: Create the User
+            user = user_form.save()
+            login(request, user)  # Auto-login the user
+
+            # Step 2: Create the Person linked to the user
+            person = person_form.save()
+
+            # Step 3: Create a Patient linked to the Person
+            patient = Patient.objects.create(person=person)
+
+            # Step 4: Create the Appointment linked to the Patient
+            appointment = appointment_form.save(commit=False)
+            appointment.patient = patient  # Link appointment to newly created patient
+            appointment.save()
+
+            return redirect('appointment_success')  # Redirect to success page
+        
     else:
-        form = AppointmentForm()
-    return render(request, 'appointments/appointment_form.html', {'form': form})
+        user_form = UserRegistrationForm()
+        person_form = PersonForm()
+        appointment_form = AppointmentForm()
 
-# Edit an appointment
-def appointment_update(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id)
+    return render(
+        request,
+        'appointments/multi_step_appointment.html',
+        {
+            'user_form': user_form,
+            'person_form': person_form,
+            'appointment_form': appointment_form
+        }
+    )
+
+def appointment_success(request):
+    return render(request, 'appointments/appointment_success.html')
+
+@login_required
+def patient_appointment_booking(request):
+    # Ensure only patients can access
+    if not request.user.groups.filter(name="Patients").exists():
+        return redirect('patient_login')
+
+    # Get the patient object linked to the logged-in user
+    try:
+        patient = Patient.objects.get(person__email=request.user.email)
+    except Patient.DoesNotExist:
+        return redirect('patient_dashboard')
+
     if request.method == "POST":
-        form = AppointmentForm(request.POST, instance=appointment)
+        form = PatientAppointmentForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('appointment_list')
+            appointment = form.save(commit=False)
+            appointment.patient = patient  # Assign logged-in patient
+            appointment.save()
+            return redirect('patient_dashboard')
     else:
-        form = AppointmentForm(instance=appointment)
-    return render(request, 'appointments/appointment_form.html', {'form': form})
+        form = PatientAppointmentForm()
 
-# Delete an appointment
-def appointment_delete(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id)
-    if request.method == "POST":
-        appointment.delete()
-        return redirect('appointment_list')
-    return render(request, 'appointments/appointment_confirm_delete.html', {'appointment': appointment})
+    return render(request, 'appointments/patient_appointment_form.html', {'form': form})

@@ -25,26 +25,33 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             max-width: 600px;
         }
-        .login-button {
+        .login-buttons {
             position: absolute;
             top: 20px;
             right: 20px;
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Login as Staff Button -->
-    <a href="{% url 'admin:index' %}" class="btn btn-primary login-button">Login as Staff</a>
+    <!-- Login Buttons -->
+    <div class="login-buttons">
+        <a href="{% url 'patient_login' %}" class="btn btn-secondary">Login as Patient</a>
+        <a href="{% url 'admin:index' %}" class="btn btn-primary">Login as Staff</a>
+    </div>
 
     <!-- Main Start Page Content -->
     <div class="hero-section">
         <div class="container-box">
             <h1>Welcome to MedCom SaaS</h1>
             <p>Manage appointments, patient records, and healthcare services efficiently with MedCom SaaS.</p>
-            <a href="{% url 'reports_dashboard' %}" class="btn btn-success">View Reports</a>
+            <p>New to our service?</p>
+            <a href="{% url 'multi_step_appointment' %}" class="btn btn-success">Register and make an appointment!</a>
         </div>
     </div>
 
 </body>
 </html>
+

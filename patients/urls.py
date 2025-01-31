@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import patient_list, patient_create, patient_update, patient_delete
+from .views import patient_login, patient_dashboard, patient_profile_update
+from appointments.views import patient_appointment_booking
 
 urlpatterns = [
-    path('', patient_list, name='patient_list'),
-    path('create/', patient_create, name='patient_create'),
-    path('<int:patient_id>/edit/', patient_update, name='patient_update'),
-    path('<int:patient_id>/delete/', patient_delete, name='patient_delete'),
+    path('login/', patient_login, name='patient_login'),
+    path('dashboard/', patient_dashboard, name='patient_dashboard'),
+    path('appointment/book/', patient_appointment_booking, name='patient_appointment_booking'),
+    path('profile/edit/', patient_profile_update, name='patient_profile_update'),
 ]

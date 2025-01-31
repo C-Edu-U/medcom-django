@@ -1,9 +1,8 @@
 from django.urls import path
-from .views import appointment_list, appointment_create, appointment_update, appointment_delete
+from .views import multi_step_appointment, appointment_success
 
 urlpatterns = [
-    path('', appointment_list, name='appointment_list'),
-    path('create/', appointment_create, name='appointment_create'),
-    path('<int:appointment_id>/edit/', appointment_update, name='appointment_update'),
-    path('<int:appointment_id>/delete/', appointment_delete, name='appointment_delete'),
+    path('create/', multi_step_appointment, name='multi_step_appointment'),
+    path('success/', appointment_success, name='appointment_success'),
 ]
+
