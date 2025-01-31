@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('persons/', include('people.urls')),
@@ -24,6 +27,7 @@ urlpatterns = [
     path('doctors/', include('doctors.urls')),
     path('services/', include('services.urls')),
     path('appointments/', include('appointments.urls')),
-]
+    path('clinical_histories/', include('clinical_histories.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Enable media file serving
 
 
