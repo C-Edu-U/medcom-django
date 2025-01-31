@@ -1,5 +1,5 @@
 from django.db import models
-from people.models import Person
+from patients.models import Person
 
 class Specialization(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -22,4 +22,3 @@ class DoctorSpecialization(models.Model):
 
     def __str__(self):
         return f"{self.doctor} - {self.specialization.name}"
-

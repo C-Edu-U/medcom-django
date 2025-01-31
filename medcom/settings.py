@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'clinical_histories',
     'doctors',
     'reports',
+    'services',  # New services app
 ]
 
 

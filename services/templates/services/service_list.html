@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Service List</title>
+</head>
+<body>
+    <h1>Services</h1>
+    <a href="{% url 'service_create' %}">Add New Service</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Doctors</th>
+                <th>Specializations</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+                <tr>
+                    <td>{{ service.name }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>{{ service.price }}</td>
+                    <td>
+                        {% for doctor in service.doctors.all %}
+                            Dr. {{ doctor.person.first_name }} {{ doctor.person.last_name }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for specialization in service.specializations.all %}
+                            {{ specialization.name }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{% url 'service_update' service.id %}">Edit</a> |
+                        <a href="{% url 'service_delete' service.id %}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
