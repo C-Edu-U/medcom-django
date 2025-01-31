@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
+from .views import start_page
 
 # Redirect superusers to the reports page from admin
 def admin_home(request):
@@ -27,6 +28,7 @@ def admin_home(request):
     return redirect('admin:index')
 
 urlpatterns = [
+    path('', start_page, name='start_page'),  # Start page at the root URL
     path('admin/', admin.site.urls),
     path('persons/', include('people.urls')),
     path('patients/', include('patients.urls')),
