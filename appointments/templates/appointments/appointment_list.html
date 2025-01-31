@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appointment List</title>
+</head>
+<body>
+    <h1>Appointments</h1>
+    <a href="{% url 'appointment_create' %}">Schedule New Appointment</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Service</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.date }}</td>
+                    <td>{{ appointment.time }}</td>
+                    <td>{{ appointment.patient.person.first_name }} {{ appointment.patient.person.last_name }}</td>
+                    <td>Dr. {{ appointment.doctor.person.first_name }} {{ appointment.doctor.person.last_name }}</td>
+                    <td>{{ appointment.service.name }}</td>
+                    <td>{{ appointment.status }}</td>
+                    <td>
+                        <a href="{% url 'appointment_update' appointment.id %}">Edit</a> |
+                        <a href="{% url 'appointment_delete' appointment.id %}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

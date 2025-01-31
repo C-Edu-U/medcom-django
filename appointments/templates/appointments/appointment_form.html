@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appointment Form</title>
+</head>
+<body>
+    <h1>{% if form.instance.pk %}Edit Appointment{% else %}Schedule New Appointment{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    <a href="{% url 'appointment_list' %}">Back</a>
+</body>
+</html>
