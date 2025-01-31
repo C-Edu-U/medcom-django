@@ -32,21 +32,38 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'people',         # New app for Person
+    'people', 
     'users',
     'appointments',
     'patients',
     'clinical_histories',
     'doctors',
     'reports',
-    'services',  # New services app
+    'services', 
 ]
+
+
+# Added Jazzmin template
+JAZZMIN_SETTINGS = {
+    "site_title": "MedCom SaaS Admin",  # Changes browser tab title
+    "site_header": "MedCom SaaS",  # Changes main title in the admin panel
+    "site_brand": "MedCom SaaS",  # Changes logo text in top-left corner
+    "welcome_sign": "Welcome to MedCom SaaS Dashboard",
+    "copyright": "© 2024 MedCom SaaS",  # Custom footer text
+    "topmenu_links": [
+        {"name": "Reports", "url": "reports_dashboard", "permissions": ["auth.view_user"]},  # Button in Top Menu
+    ],
+    "usermenu_links": [
+        {"name": "Reports", "url": "reports_dashboard", "new_window": False},  # Button in User Menu
+    ],  
+}
 
 
 

@@ -1,22 +1,26 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Count
 from appointments.models import Appointment
 from doctors.models import Doctor
 from patients.models import Patient
 from services.models import Service
 
+# Function to check if the user is a superuser
+def is_superuser(user):
+    return user.is_authenticated and user.is_superuser
+
+@login_required  # Requires login
+@user_passes_test(is_superuser)  # Restricts access to superusers only
 def reports_dashboard(request):
-    # Get date range filter from request (default: last 30 days)
     start_date = request.GET.get('start_date', '2023-01-01')
     end_date = request.GET.get('end_date', '2030-12-31')
 
-    # Count all registered records
     total_patients = Patient.objects.count()
     total_doctors = Doctor.objects.count()
     total_services = Service.objects.count()
     total_appointments = Appointment.objects.filter(date__range=[start_date, end_date]).count()
 
-    # Group appointments by status
     appointments_by_status = (
         Appointment.objects.filter(date__range=[start_date, end_date])
         .values('status')
@@ -24,7 +28,6 @@ def reports_dashboard(request):
         .order_by('-count')
     )
 
-    # Group appointments by doctor
     appointments_by_doctor = (
         Appointment.objects.filter(date__range=[start_date, end_date])
         .values('doctor__person__first_name', 'doctor__person__last_name')
@@ -32,7 +35,6 @@ def reports_dashboard(request):
         .order_by('-count')
     )
 
-    # Group appointments by service
     appointments_by_service = (
         Appointment.objects.filter(date__range=[start_date, end_date])
         .values('service__name')
@@ -55,5 +57,6 @@ def reports_dashboard(request):
             'appointments_by_service': appointments_by_service,
         },
     )
+
 
 
