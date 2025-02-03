@@ -1,6 +1,6 @@
 # **MedCom SaaS - Healthcare Management System**  
 
-![MedCom Logo](static/images/logo.png)
+![MedCom Logo](medcom/static/images/logo.png)
 
 ## **Overview**  
 MedCom SaaS is a **comprehensive healthcare management system** designed to streamline **patient management, appointment scheduling, medical record handling, and revenue tracking** for hospitals, private practices, and independent doctors.
