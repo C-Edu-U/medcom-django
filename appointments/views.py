@@ -6,9 +6,12 @@ from people.models import Person
 from .models import Appointment
 from .forms import UserRegistrationForm, PersonForm, AppointmentForm
 from django.contrib.auth.decorators import login_required
-from appointments.models import Appointment
 from appointments.forms import PatientAppointmentForm
 from patients.models import Patient
+from doctors.models import DoctorSchedule
+from django.http import JsonResponse
+from services.models import Service
+
 
 def multi_step_appointment(request):
     if request.method == "POST":
@@ -58,7 +61,6 @@ def patient_appointment_booking(request):
     if not request.user.groups.filter(name="Patients").exists():
         return redirect('patient_login')
 
-    # Get the patient object linked to the logged-in user
     try:
         patient = Patient.objects.get(person__email=request.user.email)
     except Patient.DoesNotExist:
@@ -69,9 +71,38 @@ def patient_appointment_booking(request):
         if form.is_valid():
             appointment = form.save(commit=False)
             appointment.patient = patient  # Assign logged-in patient
+            
+            # Retrieve the selected time slot and mark it as booked
+            time_slot = form.cleaned_data['time_slot']
+            time_slot.is_booked = True
+            time_slot.save()
+
+            # Assign the booked slot to the appointment
+            appointment.date = time_slot.date
+            appointment.time = time_slot.time
             appointment.save()
+
             return redirect('patient_dashboard')
     else:
         form = PatientAppointmentForm()
 
     return render(request, 'appointments/patient_appointment_form.html', {'form': form})
+
+
+def get_available_slots(request):
+    doctor_id = request.GET.get('doctor_id')
+    date = request.GET.get('date')
+    slots = DoctorSchedule.objects.filter(doctor_id=doctor_id, date=date, is_booked=False).values('id', 'time')
+    return JsonResponse(list(slots), safe=False)
+
+
+def get_available_services(request):
+    doctor_id = request.GET.get('doctor_id')
+
+    if not doctor_id:
+        return JsonResponse([], safe=False)
+
+    # Get services where the selected doctor is assigned
+    services = Service.objects.filter(doctors__id=doctor_id).values('id', 'name')
+
+    return JsonResponse(list(services), safe=False)

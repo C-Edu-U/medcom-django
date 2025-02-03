@@ -22,3 +22,12 @@ class DoctorSpecialization(models.Model):
 
     def __str__(self):
         return f"{self.doctor} - {self.specialization.name}"
+
+class DoctorSchedule(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name="schedules")
+    date = models.DateField()  # The day the doctor is available
+    time = models.TimeField()  # The specific available time slot
+    is_booked = models.BooleanField(default=False)  # Marks if the slot is taken
+
+    def __str__(self):
+        return f"{self.doctor.person.first_name} - {self.date} at {self.time}"
