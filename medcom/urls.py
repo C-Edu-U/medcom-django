@@ -38,6 +38,7 @@ urlpatterns = [
     path('clinical_histories/', include('clinical_histories.urls')),
     path('reports/', include('reports.urls')),
     path('clinical_histories/', include('clinical_histories.urls')),
+    path('reports/', include('reports.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Enable media file serving
 
 

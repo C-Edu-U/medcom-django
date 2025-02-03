@@ -36,8 +36,14 @@
 <body>
 
     <div class="container mt-4">
-        <h1>Reports Dashboard</h1>
 
+        <div class="text-start mt-3">
+            <!-- Back to Admin Button -->
+            <a href="/admin/" class="btn btn-dark">Back to Admin Panel</a>
+        </div>
+
+        <h1>Reports Dashboard</h1>
+       
         <!-- Date Filter Form -->
         <form method="GET" class="mb-4 d-flex justify-content-center">
             <div class="me-2">
@@ -53,24 +59,44 @@
             </div>
         </form>
 
+        <!-- Button Container for the Generate Revenue Report Button -->
+        <div class="d-flex justify-content-end align-items-center mb-4">
+            <a href="#" onclick="generateRevenueReport()" class="btn btn-danger">Download Revenue Report (PDF)</a>
+        </div>
+
+        <script>
+            function generateRevenueReport() {
+                let startDate = document.querySelector("input[name='start_date']").value;
+                let endDate = document.querySelector("input[name='end_date']").value;
+                let url = `/reports/generate_revenue_pdf/?start_date=${startDate}&end_date=${endDate}`;
+                window.location.href = url;
+            }
+        </script>
+
         <!-- Summary Cards -->
         <div class="row text-center">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card p-3">
                     <h5>Total Appointments</h5>
                     <h3>{{ total_appointments }}</h3>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card p-3">
                     <h5>Patients</h5>
                     <h3>{{ total_patients }}</h3>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card p-3">
                     <h5>Doctors</h5>
                     <h3>{{ total_doctors }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 bg-success text-white">
+                    <h5>Total Revenue</h5>
+                    <h3>${{ total_revenue|floatformat:2 }}</h3>
                 </div>
             </div>
         </div>
@@ -96,7 +122,17 @@
                 <canvas id="appointmentsByServiceChart"></canvas>
             </div>
         </div>
+
+                <!-- Revenue Chart -->
+                <div class="mt-4">
+                    <div class="card p-4">
+                        <h4>Revenue Trend</h4>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
     </div>
+
+    
 
     <script>
         // Chart.js - Appointments by Status
@@ -139,6 +175,52 @@
                 datasets: [{
                     data: [{% for service in appointments_by_service %}{{ service.count }},{% endfor %}],
                     backgroundColor: '#e74c3c'
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+
+     <script>
+        // Chart.js - Revenue Trend
+        var ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctxRevenue, {
+            type: 'line',
+            data: {
+                labels: [{% for label in revenue_labels %}"{{ label }}",{% endfor %}],
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: [{% for value in revenue_values %}{{ value }},{% endfor %}],
+                    borderColor: '#1abc9c',
+                    backgroundColor: 'rgba(26, 188, 156, 0.2)',
+                    fill: true,
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+    
+    <script>
+        // Chart.js - Revenue Trend
+        var ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctxRevenue, {
+            type: 'line',
+            data: {
+                labels: [{% for label in revenue_labels %}"{{ label }}",{% endfor %}],
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: [{% for value in revenue_values %}{{ value }},{% endfor %}],
+                    borderColor: '#1abc9c',
+                    backgroundColor: 'rgba(26, 188, 156, 0.2)',
+                    fill: true,
                 }]
             },
             options: {
