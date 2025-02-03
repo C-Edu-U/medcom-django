@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register to MedCom SaaS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center">Register to MedCom SaaS</h2>
+        <p class="text-center text-muted">Complete your registration to manage your healthcare services.</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <h4 class="mb-3">Step 1: Create an Account</h4>
+                {{ user_form.as_p }}
+            </div>
+
+            <div class="mb-4">
+                <h4 class="mb-3">Step 2: Enter Your Personal Information</h4>
+                {{ person_form.as_p }}
+            </div>
+
+            <div class="alert alert-info text-center">
+                After completing registration, you can log in and book an appointment from your dashboard.
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+

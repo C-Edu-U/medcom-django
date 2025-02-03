@@ -52,6 +52,11 @@
     <!-- Edit Personal Information -->
     <h3 class="mt-4">Edit Your Profile</h3>
     <a href="{% url 'patient_profile_update' %}" class="btn btn-warning">Edit Profile</a>
+
+    <!-- Download Clinical Histories as PDF -->
+    <h3 class="mt-4">Download Your Clinical History</h3>
+    <a href="{% url 'generate_clinical_history_pdf' %}" class="btn btn-danger">Download PDF</a>
+
 </div>
 
 </body>

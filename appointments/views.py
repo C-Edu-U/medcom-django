@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from patients.models import Patient
 from people.models import Person
 from .models import Appointment
-from .forms import UserRegistrationForm, PersonForm, AppointmentForm
+from .forms import UserRegistrationForm, PersonForm
 from django.contrib.auth.decorators import login_required
 from appointments.forms import PatientAppointmentForm
 from patients.models import Patient
@@ -13,13 +13,12 @@ from django.http import JsonResponse
 from services.models import Service
 
 
-def multi_step_appointment(request):
+def multi_step_registration(request):
     if request.method == "POST":
         user_form = UserRegistrationForm(request.POST)
         person_form = PersonForm(request.POST)
-        appointment_form = AppointmentForm(request.POST)
 
-        if user_form.is_valid() and person_form.is_valid() and appointment_form.is_valid():
+        if user_form.is_valid() and person_form.is_valid():
             # Step 1: Create the User
             user = user_form.save()
             login(request, user)  # Auto-login the user
@@ -30,30 +29,23 @@ def multi_step_appointment(request):
             # Step 3: Create a Patient linked to the Person
             patient = Patient.objects.create(person=person)
 
-            # Step 4: Create the Appointment linked to the Patient
-            appointment = appointment_form.save(commit=False)
-            appointment.patient = patient  # Link appointment to newly created patient
-            appointment.save()
-
-            return redirect('appointment_success')  # Redirect to success page
+            return redirect('registration_success')  # Redirect to success page
         
     else:
         user_form = UserRegistrationForm()
         person_form = PersonForm()
-        appointment_form = AppointmentForm()
 
     return render(
         request,
-        'appointments/multi_step_appointment.html',
+        'appointments/multi_step_registration.html',
         {
             'user_form': user_form,
-            'person_form': person_form,
-            'appointment_form': appointment_form
+            'person_form': person_form
         }
     )
 
-def appointment_success(request):
-    return render(request, 'appointments/appointment_success.html')
+def registration_success(request):
+    return render(request, 'appointments/registration_success.html')
 
 @login_required
 def patient_appointment_booking(request):
