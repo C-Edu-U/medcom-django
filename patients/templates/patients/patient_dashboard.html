@@ -23,6 +23,7 @@
                 <th>Time</th>
                 <th>Doctor</th>
                 <th>Service</th>
+                <th>Price</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -33,6 +34,7 @@
                     <td>{{ appointment.time }}</td>
                     <td>Dr. {{ appointment.doctor.person.first_name }} {{ appointment.doctor.person.last_name }}</td>
                     <td>{{ appointment.service.name }}</td>
+                    <td>{{ appointment.service.price }}</td>
                     <td>{{ appointment.status }}</td>
                 </tr>
             {% empty %}
