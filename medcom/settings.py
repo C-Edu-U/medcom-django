@@ -55,6 +55,8 @@ JAZZMIN_SETTINGS = {
     "site_title": "MedCom SaaS Admin",  # Changes browser tab title
     "site_header": "MedCom SaaS",  # Changes main title in the admin panel
     "site_brand": "MedCom SaaS",  # Changes logo text in top-left corner
+    "site_logo": "images/logo.png",  # Use the relative path from the static folder
+    #"login_logo": "images/logo.png",  # Logo on the login page
     "welcome_sign": "Welcome to MedCom SaaS Dashboard",
     "copyright": "© 2024 MedCom SaaS",  # Custom footer text
     "topmenu_links": [
@@ -145,6 +147,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "medcom/static"),  # Ensure the path to your static folder is included
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
